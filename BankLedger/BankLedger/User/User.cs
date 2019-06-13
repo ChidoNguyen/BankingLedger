@@ -32,30 +32,25 @@ namespace BankLedger.User
         // Withdraw , Deposit , Transaction History , check balance //
 
         /*
-         Function : withdraw
+         Function : withdrawTransaction
          Job : lets user track/update withdrawals
          Params: takes a string description, and a float amount
              */
 
-        public void withdraw(string description, double amount)
+        public void withdrawTransaction(string description, double amount)
         {
-            //Deduct from Balance
-
-            updateBalance(amount * -1); // change it to a negative since we are withdrawing
-
             //Update Tx Log
             string updatedDes = "Withdrawal: " + description;
             var txPair = new Tuple<string, double>(updatedDes, amount);
             updateTransactionHistory(txPair);
         }
         /*
-         Function : deposit
+         Function : depositTransaction
          Job : lets user track/update deposits
          Params: takes a string description, and a float amount
              */
-        public void deposit(string description, double amount)
+        public void depositTransaction(string description, double amount)
         {
-            updateBalance(amount);
             string updatedDes = "Deposit: " + description;
             var txPair = new Tuple<string, double>(updatedDes, amount);
             updateTransactionHistory(txPair);
@@ -91,7 +86,7 @@ namespace BankLedger.User
          Param: Takes a float value
          Returns: Nothing
              */
-        private void updateBalance(double amount)
+        public void updateBalance(double amount)
         {
             this.balance += amount;
         }

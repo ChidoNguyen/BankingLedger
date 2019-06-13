@@ -156,7 +156,12 @@ namespace BankLedger.Ledger
             this.accounts.Add(newUser);
             Console.Clear();
         }
-
+        /*
+         Function: checkBalance()
+         Job: Allows user to see their account balance, waits before clearing screen
+         Params: None
+         Returns: None; Console output
+             */
         public void checkBalance()
         {
             Console.WriteLine("The current balance is $ {0}.", this.currentAcc.checkBalance());
@@ -174,7 +179,9 @@ namespace BankLedger.Ledger
             Console.Write("Make a note about this deposit: ");
             Describe = Console.ReadLine();
             double value = Convert.ToDouble(Amount);
-            this.currentAcc.deposit(Describe, value);
+            //Update the acc balance and push a memo to update txHistory in user
+            updateAccBalance(value);
+            this.currentAcc.depositTransaction(Describe, value);
             Console.Clear();
 
         }
@@ -188,7 +195,8 @@ namespace BankLedger.Ledger
             Console.Write("Make a note about this withdrawal: ");
             Describe = Console.ReadLine();
             double value = Convert.ToDouble(Amount);
-            this.currentAcc.withdraw(Describe, value);
+            updateAccBalance(value * -1); // *-1 b/c we're withdrawing
+            this.currentAcc.withdrawTransaction(Describe, value);
             Console.Clear();
         }
 
@@ -196,6 +204,7 @@ namespace BankLedger.Ledger
         {
             this.currentAcc = null;
             this.login = false;
+            Console.Clear();
         }
 
         public void seeHistory()
@@ -216,6 +225,10 @@ namespace BankLedger.Ledger
 
         //Util//
 
+        public void updateAccBalance(double amount)
+        {
+            this.currentAcc.updateBalance(amount);
+        }
         public int notLoggedInSetup()
         {
             string usrInput;
