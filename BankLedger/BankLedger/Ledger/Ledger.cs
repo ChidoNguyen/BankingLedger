@@ -16,7 +16,11 @@ namespace BankLedger.Ledger
             this.currentAcc = null;
         }
 
+        /*
+         Function: runLedger
+         Job: Flow control of the program and gives user options to perform tasks
 
+             */
         public void runLedger()
         {
             
@@ -170,6 +174,12 @@ namespace BankLedger.Ledger
             Console.Clear();
         }
 
+        /*
+         Function: makeDeposit()
+         Job: Prompts user for a deposit amount + description
+         Parameters: None
+         Returns: None
+             */
         public void makeDeposit()
         {
             string Amount;
@@ -185,7 +195,12 @@ namespace BankLedger.Ledger
             Console.Clear();
 
         }
-
+        /*
+         Function: makeWithdrawal()
+         Job: Prompts user for a withdrawal amount + description
+         Parameters: None
+         Returns: None
+             */
         public void makeWithdrawal()
         {
             string Amount;
@@ -199,7 +214,12 @@ namespace BankLedger.Ledger
             this.currentAcc.withdrawTransaction(Describe, value);
             Console.Clear();
         }
-
+        /*
+         Function: logout()
+         Job: Logs the user out by nulling our currentAcc field aka the target acc all transaction go to; and setting the login (bool status) to false
+         Parameters: None
+         Returns: None
+             */
         public void logout()
         {
             this.currentAcc = null;
@@ -207,6 +227,12 @@ namespace BankLedger.Ledger
             Console.Clear();
         }
 
+        /*
+         Function: seeHistory()
+         Job: prints out all transaction history of current account
+         Parameters: None
+         Returns: None; console printout
+             */
         public void seeHistory()
         {
             List<Tuple<string,double>> history = this.currentAcc.checkHistory();
@@ -225,10 +251,12 @@ namespace BankLedger.Ledger
 
         //Util//
 
+         // Utility Function which updates the account balance by calling on the User method//
         public void updateAccBalance(double amount)
         {
             this.currentAcc.updateBalance(amount);
         }
+        // Handles letting the user pick options when not logged in returns 1-3 for option choice
         public int notLoggedInSetup()
         {
             string usrInput;
@@ -236,12 +264,18 @@ namespace BankLedger.Ledger
             Console.WriteLine("Option 1 : Login");
             Console.WriteLine("Option 2 : Create Account");
             Console.WriteLine("Option 3 : Quit");
-            Console.Write("Input option number then press enter : ");
-            usrInput = Console.ReadLine();
+            // Do While loop incase user doesn't input any values
+            do
+            {
+                Console.Write("Input option number then press enter : ");
+                usrInput = Console.ReadLine();
+            } while (usrInput == "");
+            //usrInput = Console.ReadLine();
             userInputInt = Convert.ToInt32(usrInput);
             return userInputInt;
         }
 
+        // Handles letting user pick options when they ARE logged in 1-5 choices
         public int loggedOptions()
         {
             string usrInput;
@@ -251,13 +285,16 @@ namespace BankLedger.Ledger
             Console.WriteLine("Option 3 : Withdrawal");
             Console.WriteLine("Option 4 : Transaction History");
             Console.WriteLine("Option 5 : Logout");
-            Console.Write("Input option number then press enter : ");
-            usrInput = Console.ReadLine();
+            do
+            {
+                Console.Write("Input option number then press enter : ");
+                usrInput = Console.ReadLine();
+            } while (usrInput == "");
             userInputInt = Convert.ToInt32(usrInput);
             return userInputInt;
         }
 
-
+        //Checks if user and password matches 
         private void updateLogStatus(string name, string pass)
         {
             foreach (Checkbook person in this.accounts)
@@ -277,7 +314,7 @@ namespace BankLedger.Ledger
                 Console.WriteLine("Login Failed");
         }
 
-
+        // checks to see if username already exists in our accounts list
         private bool checkUser(string name)
         {
             foreach (Checkbook person in this.accounts)
