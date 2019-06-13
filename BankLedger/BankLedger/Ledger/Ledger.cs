@@ -8,7 +8,7 @@ namespace BankLedger.Ledger
 {
     class NPC
     {
-        private List<Checkbook> accounts = new List<Checkbook>();
+        private List<Checkbook> accounts = new List<Checkbook>(); // keeps a running list of created account for each console session
         private bool login;
         private Checkbook currentAcc;
         public NPC() {
@@ -160,6 +160,9 @@ namespace BankLedger.Ledger
         public void checkBalance()
         {
             Console.WriteLine("The current balance is $ {0}.", this.currentAcc.checkBalance());
+            Console.WriteLine("Press Enter When Done.");
+            string tmp = Console.ReadLine();
+            Console.Clear();
         }
 
         public void makeDeposit()

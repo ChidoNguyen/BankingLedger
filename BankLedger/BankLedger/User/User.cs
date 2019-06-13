@@ -17,7 +17,7 @@ namespace BankLedger.User
 
         public string USERID {
             get { return this.userID; }
-            set { this.userID = value; }
+            //set { this.userID = value; }
         }
 
         // Create the user //
@@ -107,6 +107,11 @@ namespace BankLedger.User
             this.txHistory.Add(memo);
         }
 
+        /* Function : checkPassword
+         * Job: a basic comparison to see if user input password matches login ID password
+         * Param: String for password
+         * Returns: boolean
+         * */
         public bool checkPassword(string pass)
         {
             if (this.userPASS == pass)
