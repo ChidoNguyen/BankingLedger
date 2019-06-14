@@ -155,7 +155,16 @@ namespace BankLedger.Ledger
             Console.Clear();
             Console.Write("Starting Balance: ");
             string balance = Console.ReadLine();
-            double conversion = Convert.ToDouble(balance);
+            // https://social.msdn.microsoft.com/Forums/windows/en-US/84990ad2-5046-472b-b103-f862bfcd5dbc/how-to-check-string-is-number-or-not-in-c?forum=winforms //
+            double conversion;
+            bool numberInput = double.TryParse(balance, out conversion);
+            while (!numberInput)
+            {
+                Console.Write("Please enter a numerical value. Starting Balance: ");
+                balance = Console.ReadLine();
+                numberInput = double.TryParse(balance, out conversion);
+            }
+            conversion = Convert.ToDouble(balance);
             Checkbook newUser = new Checkbook(userName, userPass, conversion);
             this.accounts.Add(newUser);
             Console.Clear();
