@@ -108,6 +108,7 @@ namespace BankLedger.Ledger
             Console.Write("Username :");
             userName = Console.ReadLine();
             // Could add some "protection" masking password from showing in console
+            // not entirely sure how to mask it
             Console.Write("Password :");
             userPass = Console.ReadLine();
             Console.Clear();
@@ -156,6 +157,7 @@ namespace BankLedger.Ledger
             Console.Write("Starting Balance: ");
             string balance = Console.ReadLine();
             // https://social.msdn.microsoft.com/Forums/windows/en-US/84990ad2-5046-472b-b103-f862bfcd5dbc/how-to-check-string-is-number-or-not-in-c?forum=winforms //
+            // Prevents user from inputing letters and symbols into a numerical value//
             double conversion;
             bool numberInput = double.TryParse(balance, out conversion);
             while (!numberInput)
@@ -164,7 +166,7 @@ namespace BankLedger.Ledger
                 balance = Console.ReadLine();
                 numberInput = double.TryParse(balance, out conversion);
             }
-            conversion = Convert.ToDouble(balance);
+            conversion = truncateInputs(Convert.ToDouble(balance));
             Checkbook newUser = new Checkbook(userName, userPass, conversion);
             this.accounts.Add(newUser);
             Console.Clear();
@@ -197,7 +199,7 @@ namespace BankLedger.Ledger
             Amount = Console.ReadLine();
             Console.Write("Make a note about this deposit: ");
             Describe = Console.ReadLine();
-            double value = Convert.ToDouble(Amount);
+            double value = truncateInputs(Convert.ToDouble(Amount));
             //Update the acc balance and push a memo to update txHistory in user
             updateAccBalance(value);
             this.currentAcc.depositTransaction(Describe, value);
@@ -218,7 +220,7 @@ namespace BankLedger.Ledger
             Amount = Console.ReadLine();
             Console.Write("Make a note about this withdrawal: ");
             Describe = Console.ReadLine();
-            double value = Convert.ToDouble(Amount);
+            double value = truncateInputs(Convert.ToDouble(Amount));
             updateAccBalance(value * -1); // *-1 b/c we're withdrawing
             this.currentAcc.withdrawTransaction(Describe, value);
             Console.Clear();
@@ -270,6 +272,7 @@ namespace BankLedger.Ledger
         {
             string usrInput;
             int userInputInt;
+            bool isInt;
             Console.WriteLine("Option 1 : Login");
             Console.WriteLine("Option 2 : Create Account");
             Console.WriteLine("Option 3 : Quit");
@@ -278,7 +281,9 @@ namespace BankLedger.Ledger
             {
                 Console.Write("Input option number then press enter : ");
                 usrInput = Console.ReadLine();
-            } while (usrInput == "");
+                //Checks for int input decimal number crashes previously//
+                isInt = int.TryParse(usrInput, out userInputInt);
+            } while (usrInput == "" || !isInt);
             //usrInput = Console.ReadLine();
             userInputInt = Convert.ToInt32(usrInput);
             return userInputInt;
@@ -289,6 +294,7 @@ namespace BankLedger.Ledger
         {
             string usrInput;
             int userInputInt;
+            bool isInt;
             Console.WriteLine("Option 1 : Check Balance");
             Console.WriteLine("Option 2 : Deposit");
             Console.WriteLine("Option 3 : Withdrawal");
@@ -298,7 +304,8 @@ namespace BankLedger.Ledger
             {
                 Console.Write("Input option number then press enter : ");
                 usrInput = Console.ReadLine();
-            } while (usrInput == "");
+                isInt = int.TryParse(usrInput, out userInputInt);
+            } while (usrInput == "" || !isInt);
             userInputInt = Convert.ToInt32(usrInput);
             return userInputInt;
         }
@@ -333,6 +340,15 @@ namespace BankLedger.Ledger
             }
 
             return true;
+        }
+
+
+        // truncate number entered to 2 decimals places max since we're dealing with money //
+        // https://docs.microsoft.com/en-us/dotnet/api/system.math.truncate?redirectedfrom=MSDN&view=netframework-4.8#overloads
+        //https://stackoverflow.com/questions/38871691/rounding-up-to-2-decimal-places-c-sharp
+        private double truncateInputs(double value)
+        {
+            return Math.Truncate(value * 100) / 100;
         }
     }
 }
